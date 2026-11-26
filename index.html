@@ -223,7 +223,6 @@ p{margin:0 0 10px}
 <section class="win" id="w-creatives" data-title="C:\WHOOPY\creatives" data-icon="assets/avatar-64.png" style="left:280px;top:70px;width:680px" hidden>
   <div class="body">
     <h2>Creatives</h2>
-    <p>Memes, stickers and banners. Click to open. More coming soon.</p>
     <div class="grid" id="gallery"></div>
   </div>
 </section>
@@ -350,7 +349,6 @@ const art=[
   ['assets/dog.png','whoopy_official.png'],
   ['assets/dog-lollipop.png','lollipop_mode.png'],
   ['assets/propeller-dog.jpg','propeller_closeup.jpg'],
-  ['assets/giphy.gif','woop_woop.gif'],
 ];
 const gal=$('#gallery');
 gal.innerHTML=art.map(([s,n],i)=>`<button class="card" data-i="${i}"><img src="${s}" alt="" loading="lazy"><span></span></button>`).join('')+
