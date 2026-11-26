@@ -21,11 +21,11 @@
 <script src="https://plugin.jup.ag/plugin-v1.js" data-preload defer></script>
 <style>
 /*
-VOICE: loud, dumb, happy — a kid's toy computer the dog boots up himself.
-IDEA: a retro desktop OS (ref lufutu.com) skinned in WHOOPY yellow/orange/sky-blue.
-PICTURE: the old site's looping 3D game scene as wallpaper; the dog lives in the windows.
-COLOUR and TYPE: #FFC123 yellow, #FF8F00 orange, #05C1FF sky, black ink, cream window paper; Pixelify Sans + Roboto.
-LAYOUT: icons left, windows centre, widgets right (playlist, CA, stats), taskbar bottom.
+  $WOOPY OS — retro desktop site for Dog wif Propeller.
+  Layout: desktop icons (left) · windows (centre) · widgets (right) · WOOP WOOP marquee (bottom).
+  Palette: --yellow #FFC123, --orange #FF8F00, --sky #05C1FF, ink #000, paper #FFF6D9.
+  Fonts: Pixelify Sans (UI) + Roboto (body), self-hosted in assets/fonts.
+  Scaling: everything inside #ui is scaled by JS (fit()) on big screens / portrait tablets.
 */
 @font-face{font-family:"Pixelify Sans";font-weight:400;src:url(assets/fonts/pixelify-sans-latin-400-normal.woff2) format("woff2")}
 @font-face{font-family:"Pixelify Sans";font-weight:600;src:url(assets/fonts/pixelify-sans-latin-600-normal.woff2) format("woff2")}
@@ -310,8 +310,7 @@ document.getElementById('dim').addEventListener('click',()=>{const w=document.qu
 
 /* ---------- windows ---------- */
 let z=30;
-const tabs=null;
-function front(w){$$('.win').forEach(x=>x.classList.remove('front'));w.classList.add('front');w.style.zIndex=++z;syncTabs()}
+function front(w){$$('.win').forEach(x=>x.classList.remove('front'));w.classList.add('front');w.style.zIndex=++z}
 function clampWin(w){if(mobile()||w.classList.contains('max'))return;const W=innerWidth/UI,H=innerHeight/UI;const l=w.offsetLeft,t=w.offsetTop;const nl=Math.max(8,Math.min(l,W-w.offsetWidth-8)),nt=Math.max(8,Math.min(t,H-60-w.offsetHeight));if(nl!==l)w.style.left=nl+'px';if(nt!==t)w.style.top=nt+'px'}
 function open(id){const w=$('#w-'+id);if(!w)return;w.hidden=false;front(w);clampWin(w);if(id==='game')Game.ready();if(id==='buy')initJup()}
 let jupDone=false;
@@ -326,25 +325,16 @@ function initJup(){
     formProps:{initialInputMint:'So11111111111111111111111111111111111111112',initialOutputMint:CA,fixedMint:CA,swapMode:'ExactInOrOut'}
   });
 }
-function close(w){w.hidden=true;w.classList.remove('front');if(w.id==='w-game')Game.stop();syncTabs()}
-function syncTabs(){
-  if(!tabs)return;
-  tabs.innerHTML='';
-  $$('.win').filter(w=>!w.hidden||w.dataset.min).forEach(w=>{
-    const b=document.createElement('button');b.textContent=w.dataset.title;
-    if(w.classList.contains('front')&&!w.hidden)b.className='on';
-    b.onclick=()=>{if(w.hidden){w.hidden=false;delete w.dataset.min;front(w)}else if(w.classList.contains('front')){w.hidden=true;w.dataset.min=1;w.classList.remove('front');syncTabs()}else front(w)};
-    tabs.appendChild(b)});
-}
+function close(w){w.hidden=true;w.classList.remove('front');if(w.id==='w-game')Game.stop()}
 $$('.win').forEach(w=>{
   const bar=document.createElement('div');bar.className='bar';
   bar.innerHTML=`<img class="mini" src="${w.dataset.icon}" alt=""><span class="t"></span><button aria-label="Minimize">_</button><button aria-label="Maximize">□</button><button class="x" aria-label="Close">×</button>`;
   bar.querySelector('.t').textContent=w.dataset.title;
   w.prepend(bar);
   const [bMin,bMax,bX]=bar.querySelectorAll('button');
-  bMin.onclick=e=>{e.stopPropagation();w.hidden=true;w.dataset.min=1;w.classList.remove('front');syncTabs()};
+  bMin.onclick=e=>{e.stopPropagation();w.hidden=true;w.classList.remove('front')};
   bMax.onclick=e=>{e.stopPropagation();w.classList.toggle('max')};
-  bX.onclick=e=>{e.stopPropagation();delete w.dataset.min;close(w)};
+  bX.onclick=e=>{e.stopPropagation();close(w)};
   w.addEventListener('pointerdown',()=>front(w));
   let sx,sy,ox,oy,drag=false;
   bar.addEventListener('pointerdown',e=>{if(e.target.closest('button')||mobile()||w.classList.contains('max'))return;drag=true;sx=e.clientX;sy=e.clientY;ox=w.offsetLeft;oy=w.offsetTop;bar.setPointerCapture(e.pointerId);bar.style.cursor='grabbing'});
@@ -386,12 +376,12 @@ const tracks=[
   {t:'Propeller Anthem',d:'tail-wag remix',src:'assets/theme.mp3',start:45},
 ];
 const aud=$('#aud');aud.volume=.3;aud.loop=true;
-let cur=0,muted=false;
+let cur=0;
 const list=$('#tracks');
 list.innerHTML=tracks.map((k,i)=>`<li class="${k.src?'':'soon'}" data-i="${i}"><span class="n">${String(i+1).padStart(2,'0')}</span><span class="tt"></span><span class="d"></span><button aria-label="Play">▶</button></li>`).join('');
 list.querySelectorAll('li').forEach(li=>{const k=tracks[li.dataset.i];li.querySelector('.tt').textContent=k.t;li.querySelector('.d').textContent=k.d;
   li.querySelector('button').onclick=()=>{if(k.src)play(+li.dataset.i)}});
-function play(i,fromBoot){
+function play(i){
   const k=tracks[i];if(!k.src)return;
   if(cur!==i||!aud.src){cur=i;aud.src=k.src;aud.addEventListener('loadedmetadata',()=>{if(k.start)aud.currentTime=k.start},{once:true})}
   aud.play().catch(()=>{});ui()}
@@ -407,7 +397,7 @@ aud.addEventListener('timeupdate',()=>{if(aud.duration)$('#bar').style.width=(au
 const mq=$('#mq');const unit=Array.from({length:8},()=>'<span>WOOP WOOP<img src="assets/dog-150x150.png" alt=""></span>').join('');mq.innerHTML=unit+unit;
 
 /* ---------- boot ---------- */
-$('#boot').addEventListener('click',()=>{$('#boot').classList.add('gone');play(0,true);open('about')});
+$('#boot').addEventListener('click',()=>{$('#boot').classList.add('gone');play(0);open('about')});
 
 /* ---------- game: Propeller Run ---------- */
 var Game=(()=>{
