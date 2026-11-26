@@ -89,10 +89,6 @@ p{margin:0 0 10px}
 .avatar{width:150px;height:150px;border:3px solid var(--ink);border-radius:50%;background:var(--sky);overflow:hidden;box-shadow:4px 4px 0 var(--ink)}
 .avatar img{width:100%;height:100%;object-fit:cover;animation:wiggle 2s ease-in-out infinite}
 @keyframes wiggle{0%,100%{rotate:0deg}25%{rotate:-4deg}75%{rotate:4deg}}
-.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:6px}
-.stat{background:var(--yellow);border:2px solid var(--ink);padding:8px 4px;text-align:center;box-shadow:2px 2px 0 var(--ink)}
-.stat b{display:block;font:700 26px/1 var(--px)}
-.stat span{font:600 12px/1.2 var(--px);text-transform:uppercase}
 
 /* buy */
 .ca{display:flex;gap:8px;align-items:stretch;margin:8px 0 14px}
@@ -175,8 +171,7 @@ p{margin:0 0 10px}
   #dim:not([hidden]){display:block}
   #dim{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:25;backdrop-filter:blur(2px)}
   .hello{grid-template-columns:1fr}.avatar{width:110px;height:110px}
-  .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
-}
+  }
 @media (min-width:861px) and (orientation:portrait){#bg{object-position:82% 50%}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
@@ -199,7 +194,7 @@ p{margin:0 0 10px}
 
 <div id="dim" hidden></div>
 <!-- WINDOWS -->
-<section class="win" id="w-about" data-title="Welcome to WHOOPY OS" data-icon="assets/avatar-64.png" style="left:250px;top:40px;width:640px;height:560px" hidden>
+<section class="win" id="w-about" data-title="Welcome to WHOOPY OS" data-icon="assets/avatar-64.png" style="left:250px;top:40px;width:640px" hidden>
   <div class="body">
     <div class="hello">
       <div class="avatar"><img src="assets/avatar.jpg" alt="Woopy, the dog wif propeller"></div>
@@ -209,13 +204,6 @@ p{margin:0 0 10px}
         <p>Get to the chopper with Dog wif Propeller on the Solana network. Enjoy the in-flight snacks and watch your portfolio soar to new heights with the pawsitively based wing pup. No more tailspin, just tail wagging gains.</p>
         <p class="px">Click the icons on the desktop :D</p>
       </div>
-    </div>
-    <h3>Flight stats</h3>
-    <div class="stats">
-      <div class="stat"><b>0%</b><span>Taxes</span></div>
-      <div class="stat"><b>CA</b><span>Renounced</span></div>
-      <div class="stat"><b>LP</b><span>Burned</span></div>
-      <div class="stat"><b>1B</b><span>Supply</span></div>
     </div>
     <div class="row">
       <button class="btn" data-open="buy">Buy $WOOPY</button>
