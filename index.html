@@ -5,6 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>WHOOPY OS</title>
 <meta name="description" content="WooP WooP — Dog wif Propeller on Solana">
+<link rel="icon" href="assets/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<meta property="og:title" content="$WOOPY OS">
+<meta property="og:description" content="WooP WooP — Dog wif Propeller on Solana">
+<meta property="og:image" content="https://tayanna.github.io/whoopy-os/assets/og.jpg">
+<meta name="twitter:card" content="summary">
 <style>
 /*
 VOICE: loud, dumb, happy — a kid's toy computer the dog boots up himself.
@@ -38,6 +45,7 @@ a{color:inherit}
 .ico{display:flex;flex-direction:column;align-items:center;gap:6px;background:none;border:0;padding:6px 2px;text-decoration:none}
 .ico .pic{width:60px;height:60px;display:grid;place-items:center;filter:drop-shadow(3px 3px 0 rgba(0,0,0,.55));transition:transform .12s}
 .ico .pic img,.ico .pic svg{width:100%;height:100%;image-rendering:pixelated}
+.ico .pic img.ava{border:3px solid var(--ink);image-rendering:auto;object-fit:cover}
 .ico .lbl{font:600 15px/1.1 var(--px);background:var(--yellow);border:2px solid var(--ink);padding:3px 7px;box-shadow:2px 2px 0 var(--ink);text-align:center;max-width:100px}
 .ico:hover .pic{transform:translateY(-3px) rotate(-4deg)}
 .ico:focus-visible .lbl,.ico.sel .lbl{background:var(--ink);color:var(--yellow)}
@@ -68,7 +76,7 @@ p{margin:0 0 10px}
 /* welcome */
 .hello{display:grid;grid-template-columns:150px 1fr;gap:20px;align-items:start}
 .avatar{width:150px;height:150px;border:3px solid var(--ink);border-radius:50%;background:var(--sky);overflow:hidden;box-shadow:4px 4px 0 var(--ink)}
-.avatar img{width:100%;height:100%;object-fit:cover;object-position:50% 12%;transform:scale(1.15);animation:wiggle 2s ease-in-out infinite}
+.avatar img{width:100%;height:100%;object-fit:cover;animation:wiggle 2s ease-in-out infinite}
 @keyframes wiggle{0%,100%{rotate:0deg}25%{rotate:-4deg}75%{rotate:4deg}}
 .stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:6px}
 .stat{background:var(--yellow);border:2px solid var(--ink);padding:8px 4px;text-align:center;box-shadow:2px 2px 0 var(--ink)}
@@ -127,7 +135,7 @@ p{margin:0 0 10px}
 /* taskbar */
 #task{position:fixed;left:0;right:0;bottom:0;height:52px;background:var(--yellow);border-top:3px solid var(--ink);display:flex;align-items:center;gap:8px;padding:0 8px;z-index:800}
 #start{display:flex;align-items:center;gap:8px;height:38px;padding:0 12px 0 4px;background:var(--ink);color:var(--yellow);border:2px solid var(--ink);font:700 17px/1 var(--px)}
-#start img{width:30px;height:30px;border-radius:50%;background:var(--sky);object-fit:cover;object-position:50% 10%}
+#start img{width:30px;height:30px;border-radius:50%;border:2px solid var(--yellow);object-fit:cover}
 #tabs{flex:1;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
 #tabs button{height:38px;flex:none;max-width:200px;padding:0 12px;border:2px solid var(--ink);background:var(--paper);font:600 14px/1 var(--px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 #tabs button.on{background:var(--ink);color:var(--yellow)}
@@ -165,7 +173,7 @@ p{margin:0 0 10px}
 
 <!-- DESKTOP ICONS -->
 <nav id="icons" aria-label="Desktop">
-  <button class="ico" data-open="about"><span class="pic"><img src="assets/dog-150x150.png" alt=""></span><span class="lbl">Woop woop</span></button>
+  <button class="ico" data-open="about"><span class="pic"><img class="ava" src="assets/avatar-128.png" alt=""></span><span class="lbl">Woop woop</span></button>
   <button class="ico" data-open="buy"><span class="pic"><svg viewBox="0 0 16 16" shape-rendering="crispEdges"><rect x="4" y="1" width="8" height="1"/><rect x="2" y="2" width="12" height="12" fill="#000"/><rect x="3" y="3" width="10" height="10" fill="#FFC123"/><rect x="4" y="2" width="8" height="1" fill="#FFFA05"/><rect x="4" y="14" width="8" height="1"/><rect x="1" y="4" width="1" height="8"/><rect x="14" y="4" width="1" height="8"/><rect x="7" y="4" width="2" height="8"/><rect x="5" y="5" width="6" height="1"/><rect x="5" y="5" width="1" height="3"/><rect x="5" y="7" width="6" height="1"/><rect x="10" y="7" width="1" height="3"/><rect x="5" y="9" width="6" height="1"/></svg></span><span class="lbl">Buy $WOOPY</span></button>
   <a class="ico" href="https://pump.fun/coin/Zpt8Jdr32tvsCqjfHDgbsJwdSjqXkS6HGLyQBDNpump" target="_blank" rel="noopener"><span class="pic"><svg viewBox="0 0 16 16" shape-rendering="crispEdges"><g transform="rotate(-40 8 8)"><rect x="1" y="5" width="14" height="6" rx="0"/><rect x="2" y="6" width="6" height="4" fill="#fff"/><rect x="8" y="6" width="6" height="4" fill="#53D769"/><rect x="3" y="6" width="3" height="1" fill="#e6e6e6"/><rect x="9" y="6" width="3" height="1" fill="#9BF0A8"/><rect x="7" y="5" width="2" height="6"/></g></svg></span><span class="lbl">pump.fun</span></a>
   <a class="ico" href="https://fomo.family/" target="_blank" rel="noopener"><span class="pic"><svg viewBox="0 0 24 24" shape-rendering="crispEdges"><rect x="0" y="0" width="24" height="24"/><rect x="1" y="1" width="22" height="22" fill="#0B091F"/><g fill="#EAEDFF"><rect x="7" y="6" width="4" height="1"/><rect x="15" y="6" width="4" height="1"/><rect x="5" y="7" width="7" height="1"/><rect x="14" y="7" width="6" height="1"/><rect x="4" y="8" width="17" height="1"/><rect x="9" y="9" width="3" height="1"/><rect x="17" y="9" width="4" height="1"/><rect x="8" y="10" width="3" height="1"/><rect x="17" y="10" width="4" height="1"/><rect x="8" y="11" width="3" height="1"/><rect x="17" y="11" width="4" height="1"/><rect x="7" y="12" width="4" height="1"/><rect x="16" y="12" width="5" height="1"/><rect x="7" y="13" width="4" height="1"/><rect x="16" y="13" width="5" height="1"/><rect x="7" y="14" width="4" height="1"/><rect x="15" y="14" width="5" height="1"/><rect x="3" y="15" width="16" height="1"/><rect x="4" y="16" width="6" height="1"/><rect x="12" y="16" width="6" height="1"/><rect x="5" y="17" width="4" height="1"/><rect x="13" y="17" width="4" height="1"/></g></svg></span><span class="lbl">FOMO</span></a>
@@ -175,10 +183,10 @@ p{margin:0 0 10px}
 </nav>
 
 <!-- WINDOWS -->
-<section class="win" id="w-about" data-title="Welcome to WHOOPY OS" data-icon="assets/dog-150x150.png" style="left:250px;top:40px;width:640px;height:560px" hidden>
+<section class="win" id="w-about" data-title="Welcome to WHOOPY OS" data-icon="assets/avatar-64.png" style="left:250px;top:40px;width:640px;height:560px" hidden>
   <div class="body">
     <div class="hello">
-      <div class="avatar"><img src="assets/dog.png" alt="Whoopy, the dog wif propeller"></div>
+      <div class="avatar"><img src="assets/avatar.jpg" alt="Woopy, the dog wif propeller"></div>
       <div>
         <p class="px" style="font-size:17px;margin:0 0 4px">DOG WIF PROPELLER</p>
         <h2>I'm $WOOPY</h2>
@@ -200,7 +208,7 @@ p{margin:0 0 10px}
   </div>
 </section>
 
-<section class="win" id="w-buy" data-title="Buy $WOOPY — Jupiter" data-icon="assets/dog-150x150.png" style="left:300px;top:60px;width:560px;height:640px" hidden>
+<section class="win" id="w-buy" data-title="Buy $WOOPY — Jupiter" data-icon="assets/avatar-64.png" style="left:300px;top:60px;width:560px;height:640px" hidden>
   <div class="body">
     <h2>Buy $WOOPY</h2>
     <p class="px">Buy some of da dog wif propeller straight here on our web… or use the links below, it's up to you dawg!</p>
@@ -214,7 +222,7 @@ p{margin:0 0 10px}
   </div>
 </section>
 
-<section class="win" id="w-creatives" data-title="C:\WHOOPY\creatives" data-icon="assets/dog-150x150.png" style="left:280px;top:70px;width:680px;height:560px" hidden>
+<section class="win" id="w-creatives" data-title="C:\WHOOPY\creatives" data-icon="assets/avatar-64.png" style="left:280px;top:70px;width:680px;height:560px" hidden>
   <div class="body">
     <h2>Creatives</h2>
     <p>Memes, stickers and banners. Click to open. More coming soon.</p>
@@ -222,11 +230,11 @@ p{margin:0 0 10px}
   </div>
 </section>
 
-<section class="win" id="w-view" data-title="viewer.exe" data-icon="assets/dog-150x150.png" style="left:340px;top:50px;width:560px;height:620px" hidden>
+<section class="win" id="w-view" data-title="viewer.exe" data-icon="assets/avatar-64.png" style="left:340px;top:50px;width:560px;height:620px" hidden>
   <div class="body viewer"><img id="viewimg" alt=""></div>
 </section>
 
-<section class="win" id="w-game" data-title="Propeller Run.exe" data-icon="assets/dog-150x150.png" style="left:330px;top:30px;width:480px;height:680px" hidden>
+<section class="win" id="w-game" data-title="Propeller Run.exe" data-icon="assets/avatar-64.png" style="left:330px;top:30px;width:480px;height:680px" hidden>
   <div class="body game">
     <canvas id="cv" width="420" height="520"></canvas>
     <p class="hint">Click / Space / Tap — spin the propeller. Dodge the lollipops.</p>
@@ -260,7 +268,7 @@ p{margin:0 0 10px}
 
 <!-- TASKBAR -->
 <footer id="task">
-  <button id="start" data-open="about"><img src="assets/dog.png" alt="">WHOOPY</button>
+  <button id="start" data-open="about"><img src="assets/avatar-64.png" alt="">WHOOPY</button>
   <div id="tabs"></div>
   <div id="tray">
     <button id="mute" aria-label="Sound">♪ ON</button>
@@ -325,6 +333,7 @@ $$('[data-copy]').forEach(b=>b.addEventListener('click',async()=>{
 
 /* ---------- creatives ---------- */
 const art=[
+  ['assets/avatar.jpg','woopy_avatar.png'],
   ['assets/dog.png','whoopy_official.png'],
   ['assets/dog-lollipop.png','lollipop_mode.png'],
   ['assets/propeller-dog.jpg','propeller_closeup.jpg'],
