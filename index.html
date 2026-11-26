@@ -102,9 +102,8 @@ p{margin:0 0 10px}
 /* creatives */
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
 .card{border:2px solid var(--ink);background:#fff;box-shadow:3px 3px 0 var(--ink);padding:0;display:flex;flex-direction:column;text-align:left}
-.card img{width:100%;aspect-ratio:1;object-fit:cover;background:var(--sky);display:block;border-bottom:2px solid var(--ink)}
-.card span{font:600 13px/1.2 var(--px);padding:7px 8px}
-.card.empty{aspect-ratio:auto;min-height:190px;display:grid;place-items:center;background:repeating-linear-gradient(45deg,var(--paper2) 0 10px,var(--paper) 10px 20px);font:600 14px var(--px);color:#6b5520}
+.card img{width:100%;aspect-ratio:1;object-fit:cover;background:var(--sky);display:block}
+.card.empty{aspect-ratio:1;min-height:0;display:grid;place-items:center;background:repeating-linear-gradient(45deg,var(--paper2) 0 10px,var(--paper) 10px 20px);font:600 14px var(--px);color:#6b5520}
 .viewer{display:grid;place-items:center;height:100%}
 .viewer img{max-width:100%;max-height:100%;border:2px solid var(--ink)}
 
@@ -351,10 +350,10 @@ const art=[
   ['assets/propeller-dog.jpg','propeller_closeup.jpg'],
 ];
 const gal=$('#gallery');
-gal.innerHTML=art.map(([s,n],i)=>`<button class="card" data-i="${i}"><img src="${s}" alt="" loading="lazy"><span></span></button>`).join('')+
-  Array.from({length:4},()=>`<div class="card empty">soon™</div>`).join('');
-gal.querySelectorAll('button.card').forEach(c=>{const [s,n]=art[c.dataset.i];c.querySelector('span').textContent=n;
-  c.onclick=()=>{$('#viewimg').src=s;const v=$('#w-view');v.dataset.title=n;v.querySelector('.t').textContent=n;open('view')}});
+gal.innerHTML=art.map(([s,n],i)=>`<button class="card" data-i="${i}"><img src="${s}" alt="" loading="lazy"></button>`).join('')+
+  Array.from({length:2},()=>`<div class="card empty">soon™</div>`).join('');
+gal.querySelectorAll('button.card').forEach(c=>{const [s]=art[c.dataset.i];
+  c.onclick=()=>{$('#viewimg').src=s;open('view')}});
 
 /* ---------- radio ---------- */
 const tracks=[

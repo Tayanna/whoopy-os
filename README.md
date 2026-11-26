@@ -48,7 +48,7 @@ assets/
 | Contract address | `const CA = …` in the script, plus the `<code id="ca">` text in the Buy window, the short text in the Contract widget and the pump.fun link |
 | Social / platform links | the `<a class="ico" href="…">` desktop icons (X, pump.fun, FOMO) and the buttons in the Woop woop window |
 | Radio tracks | `const tracks = [...]` (title, subtitle, file, start second) |
-| Gallery images | `const art = [...]` (image path, caption) |
+| Gallery images | `const art = [...]` (image path, file name) |
 | Jupiter swap widget | `initJup()`: input/output mint, branding. Colours via `--jupiter-plugin-*` CSS variables |
 | Texts | the `<section class="win">` blocks (Woop woop, Buy, Creatives, Game) |
 | Colours / fonts | CSS variables in `:root` at the top of `<style>` |
