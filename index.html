@@ -163,7 +163,8 @@ p{margin:0 0 10px}
 @media (max-width:1100px){#widgets{width:250px}}
 @media (max-width:860px){
   #widgets{left:10px;right:10px;top:auto;bottom:62px;width:auto;max-height:46vh}
-  #widgets .wg+.wg{display:none}
+  #widgets .wg:nth-child(n+3){display:none}
+  #widgets{gap:8px}
   #icons{grid-template-columns:repeat(4,minmax(0,1fr));grid-template-rows:none;grid-auto-flow:row;right:10px;left:10px;top:10px;bottom:auto;grid-auto-rows:104px}
   .win{left:6px!important;top:6px!important;width:calc(var(--W) - 12px)!important;height:calc(var(--H) - 66px)!important}
   .hello{grid-template-columns:1fr}.avatar{width:110px;height:110px}
