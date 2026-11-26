@@ -42,13 +42,15 @@ html,body{margin:0;height:100%;overflow:hidden;background:#05C1FF;color:var(--in
 button{font:inherit;color:inherit;cursor:pointer}
 a{color:inherit}
 
+#ui{position:fixed;left:0;top:0;width:var(--W);height:var(--H);transform:scale(var(--ui));transform-origin:0 0;z-index:10}
+:root{--ui:1;--W:100vw;--H:100vh;--pad:20px}
 /* wallpaper */
 #bg{position:fixed;inset:0;width:100%;height:100%;object-fit:cover;z-index:0}
 .grain{position:fixed;inset:0;background:url(assets/giphy.gif) center/cover;mix-blend-mode:screen;opacity:.1;pointer-events:none;z-index:900}
 .crt{position:fixed;inset:0;pointer-events:none;z-index:901;background:repeating-linear-gradient(rgba(0,0,0,.08) 0 1px,transparent 1px 3px)}
 
 /* desktop icons */
-#icons{position:fixed;left:14px;top:14px;bottom:62px;display:grid;grid-template-columns:repeat(2,104px);grid-auto-rows:118px;grid-auto-flow:row;gap:6px 8px;align-content:start;z-index:5}
+#icons{position:fixed;left:var(--pad);top:var(--pad);bottom:62px;display:grid;grid-template-columns:repeat(2,104px);grid-auto-rows:118px;grid-auto-flow:row;gap:6px 8px;align-content:start;z-index:5}
 .ico{display:flex;flex-direction:column;align-items:center;gap:6px;background:none;border:0;padding:6px 2px;text-decoration:none}
 .ico .pic{width:60px;height:60px;display:grid;place-items:center;filter:drop-shadow(3px 3px 0 rgba(0,0,0,.55));transition:transform .12s}
 .ico .pic img,.ico .pic svg{width:100%;height:100%;image-rendering:pixelated}
@@ -59,9 +61,9 @@ a{color:inherit}
 .ico:focus-visible{outline:none}
 
 /* windows */
-.win{position:fixed;background:var(--paper);border:3px solid var(--ink);box-shadow:6px 6px 0 rgba(0,0,0,.85);display:flex;flex-direction:column;z-index:20;max-width:calc(100vw - 16px);max-height:calc(100vh - 72px)}
+.win{position:fixed;background:var(--paper);border:3px solid var(--ink);box-shadow:6px 6px 0 rgba(0,0,0,.85);display:flex;flex-direction:column;z-index:20;max-width:calc(var(--W) - 16px);max-height:calc(var(--H) - 72px)}
 .win[hidden]{display:none}
-.win.max{left:8px!important;top:8px!important;width:calc(100vw - 16px)!important;height:calc(100vh - 72px)!important}
+.win.max{left:8px!important;top:8px!important;width:calc(var(--W) - 16px)!important;height:calc(var(--H) - 72px)!important}
 .bar{display:flex;align-items:center;gap:8px;height:34px;padding:0 6px 0 8px;background:var(--ink);color:var(--yellow);cursor:grab;user-select:none;touch-action:none;flex:none}
 .win:not(.front) .bar{background:#3a3a3a;color:#d9c48a}
 .bar .t{flex:1;text-align:center;font:600 16px/1 var(--px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -114,7 +116,7 @@ p{margin:0 0 10px}
 .hint{font:600 14px var(--px);text-align:center}
 
 /* widgets */
-#widgets{position:fixed;right:14px;top:14px;width:300px;display:flex;flex-direction:column;gap:12px;z-index:5;max-height:calc(100vh - 76px);overflow:auto}
+#widgets{position:fixed;right:var(--pad);top:var(--pad);width:300px;display:flex;flex-direction:column;gap:12px;z-index:5;max-height:calc(var(--H) - 76px);overflow:auto}
 .wg{background:var(--paper);border:3px solid var(--ink);box-shadow:5px 5px 0 rgba(0,0,0,.85)}
 .wg .wh{display:flex;align-items:center;gap:8px;background:var(--ink);color:var(--yellow);font:600 15px/1 var(--px);padding:8px 10px}
 .wg .wb{padding:10px 12px}
@@ -163,7 +165,7 @@ p{margin:0 0 10px}
   #widgets{left:10px;right:10px;top:auto;bottom:62px;width:auto;max-height:46vh}
   #widgets .wg+.wg{display:none}
   #icons{grid-template-columns:repeat(4,minmax(0,1fr));grid-template-rows:none;grid-auto-flow:row;right:10px;left:10px;top:10px;bottom:auto;grid-auto-rows:104px}
-  .win{left:6px!important;top:6px!important;width:calc(100vw - 12px)!important;height:calc(100vh - 66px)!important}
+  .win{left:6px!important;top:6px!important;width:calc(var(--W) - 12px)!important;height:calc(var(--H) - 66px)!important}
   .hello{grid-template-columns:1fr}.avatar{width:110px;height:110px}
   .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
@@ -174,6 +176,7 @@ p{margin:0 0 10px}
 <video id="bg" src="assets/bg.mp4" poster="assets/bg-poster.jpg" autoplay muted loop playsinline></video>
 <div class="grain"></div><div class="crt"></div>
 
+<div id="ui">
 <!-- DESKTOP ICONS -->
 <nav id="icons" aria-label="Desktop">
   <button class="ico" data-open="about"><span class="pic"><img src="assets/dog-150x150.png" alt=""></span><span class="lbl">Woop woop</span></button>
@@ -266,6 +269,7 @@ p{margin:0 0 10px}
 
 <!-- TASKBAR -->
 <footer id="task" aria-label="WOOP WOOP"><div class="mq" id="mq"></div></footer>
+</div>
 
 <div id="boot"><div class="box"><img src="assets/dog-lollipop.png" alt=""><b>CLICK TO BOOT</b><span>WHOOPY OS v1.0 — sound on</span></div></div>
 <div class="toast" id="toast">Contract copied!</div>
@@ -276,6 +280,14 @@ p{margin:0 0 10px}
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 const CA='Zpt8Jdr32tvsCqjfHDgbsJwdSjqXkS6HGLyQBDNpump';
 const mobile=()=>matchMedia('(max-width:860px)').matches;
+let UI=1;
+function fit(){
+  UI=mobile()?1:Math.min(1.8,Math.max(1,Math.min(innerWidth/1360,innerHeight/800)));
+  const r=document.documentElement.style;
+  r.setProperty('--ui',UI);r.setProperty('--W',innerWidth/UI+'px');r.setProperty('--H',innerHeight/UI+'px');
+  r.setProperty('--pad',(innerWidth>=1700?32:20)+'px');
+}
+fit();addEventListener('resize',fit);
 
 /* ---------- windows ---------- */
 let z=30;
@@ -317,8 +329,8 @@ $$('.win').forEach(w=>{
   let sx,sy,ox,oy,drag=false;
   bar.addEventListener('pointerdown',e=>{if(e.target.closest('button')||mobile()||w.classList.contains('max'))return;drag=true;sx=e.clientX;sy=e.clientY;ox=w.offsetLeft;oy=w.offsetTop;bar.setPointerCapture(e.pointerId);bar.style.cursor='grabbing'});
   bar.addEventListener('pointermove',e=>{if(!drag)return;
-    const nx=Math.min(Math.max(ox+e.clientX-sx,-w.offsetWidth+120),innerWidth-120);
-    const ny=Math.min(Math.max(oy+e.clientY-sy,0),innerHeight-100);
+    const nx=Math.min(Math.max(ox+(e.clientX-sx)/UI,-w.offsetWidth+120),innerWidth/UI-120);
+    const ny=Math.min(Math.max(oy+(e.clientY-sy)/UI,0),innerHeight/UI-100);
     w.style.left=nx+'px';w.style.top=ny+'px'});
   bar.addEventListener('pointerup',()=>{drag=false;bar.style.cursor=''});
   bar.addEventListener('dblclick',e=>{if(!e.target.closest('button'))w.classList.toggle('max')});
