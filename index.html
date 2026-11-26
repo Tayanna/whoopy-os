@@ -71,7 +71,7 @@ a{color:inherit}
 .bar button{width:24px;height:22px;border:2px solid var(--ink);background:var(--yellow);color:var(--ink);font:700 14px/1 var(--px);padding:0;display:grid;place-items:center;outline-offset:1px}
 .bar button:hover{background:var(--lemon)}
 .bar button.x:hover{background:var(--red);color:#fff}
-.body{flex:1;overflow:auto;padding:20px;background:repeating-linear-gradient(transparent 0 2px,rgba(255,175,17,.10) 2px 3px),var(--paper)}
+.body{flex:1 1 auto;min-height:0;overflow:auto;padding:20px;background:repeating-linear-gradient(transparent 0 2px,rgba(255,175,17,.10) 2px 3px),var(--paper)}
 h2{font:700 30px/1.05 var(--px);margin:0 0 8px}
 h3{font:700 19px/1.1 var(--px);margin:18px 0 8px}
 p{margin:0 0 10px}
@@ -166,7 +166,8 @@ p{margin:0 0 10px}
   #widgets .wg:nth-child(n+3){display:none}
   #widgets{gap:8px}
   #icons{grid-template-columns:repeat(4,minmax(0,1fr));grid-template-rows:none;grid-auto-flow:row;right:10px;left:10px;top:10px;bottom:auto;grid-auto-rows:104px}
-  .win{left:6px!important;top:6px!important;width:calc(var(--W) - 12px)!important;height:calc(var(--H) - 66px)!important}
+  .win{left:6px!important;top:6px!important;width:calc(var(--W) - 12px)!important;height:auto!important;max-height:calc(var(--H) - 66px)}
+  #w-view{height:calc(var(--H) - 66px)!important}
   .hello{grid-template-columns:1fr}.avatar{width:110px;height:110px}
   .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
