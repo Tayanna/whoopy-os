@@ -177,6 +177,7 @@ p{margin:0 0 10px}
   .hello{grid-template-columns:1fr}.avatar{width:110px;height:110px}
   .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
+@media (min-width:861px) and (orientation:portrait){#bg{object-position:82% 50%}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -291,12 +292,13 @@ const CA='Zpt8Jdr32tvsCqjfHDgbsJwdSjqXkS6HGLyQBDNpump';
 const mobile=()=>matchMedia('(max-width:860px)').matches;
 let UI=1;
 function fit(){
-  UI=mobile()?1:Math.min(1.8,Math.max(1,Math.min(innerWidth/1360,innerHeight/800)));
+  const portrait=innerHeight>innerWidth;
+  UI=mobile()?1:portrait?Math.min(1.8,Math.max(1,innerWidth/740)):Math.min(1.8,Math.max(1,Math.min(innerWidth/1360,innerHeight/800)));
   const r=document.documentElement.style;
   r.setProperty('--ui',UI);r.setProperty('--W',innerWidth/UI+'px');r.setProperty('--H',innerHeight/UI+'px');
   r.setProperty('--pad',(innerWidth>=1700?32:20)+'px');
 }
-fit();addEventListener('resize',()=>{fit();dimUpd()});
+fit();addEventListener('resize',()=>{fit();dimUpd();document.querySelectorAll('.win:not([hidden])').forEach(clampWin)});
 function placeBg(){const v=document.getElementById('bg');
   if(!mobile()){v.style.top=v.style.height='';return}
   const ib=document.getElementById('icons').getBoundingClientRect().bottom, wt=document.getElementById('widgets').getBoundingClientRect().top;
@@ -310,7 +312,8 @@ document.getElementById('dim').addEventListener('click',()=>{const w=document.qu
 let z=30;
 const tabs=null;
 function front(w){$$('.win').forEach(x=>x.classList.remove('front'));w.classList.add('front');w.style.zIndex=++z;syncTabs()}
-function open(id){const w=$('#w-'+id);if(!w)return;w.hidden=false;front(w);if(id==='game')Game.ready();if(id==='buy')initJup()}
+function clampWin(w){if(mobile()||w.classList.contains('max'))return;const W=innerWidth/UI,H=innerHeight/UI;const l=w.offsetLeft,t=w.offsetTop;const nl=Math.max(8,Math.min(l,W-w.offsetWidth-8)),nt=Math.max(8,Math.min(t,H-60-w.offsetHeight));if(nl!==l)w.style.left=nl+'px';if(nt!==t)w.style.top=nt+'px'}
+function open(id){const w=$('#w-'+id);if(!w)return;w.hidden=false;front(w);clampWin(w);if(id==='game')Game.ready();if(id==='buy')initJup()}
 let jupDone=false;
 function initJup(){
   if(jupDone)return;
