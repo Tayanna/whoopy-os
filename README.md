@@ -45,7 +45,7 @@ assets/
 
 | What | Where in `index.html` |
 |---|---|
-| Contract address | `const CA = …` in the script, plus the `<code id="ca">` text in the Buy window, the short text in the Contract widget and the pump.fun / Dexscreener links |
+| Contract address | `const CA = …` in the script, plus the `<code id="ca">` text in the Buy window, the short text in the Contract widget and the pump.fun link |
 | Social / platform links | the `<a class="ico" href="…">` desktop icons (X, pump.fun, FOMO) and the buttons in the Woop woop window |
 | Radio tracks | `const tracks = [...]` (title, subtitle, file, start second) |
 | Gallery images | `const art = [...]` (image path, caption) |
