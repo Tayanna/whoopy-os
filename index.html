@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>WHOOPY OS</title>
+<meta name="description" content="WooP WooP — Dog wif Propeller on Solana">
+<style>
+/*
+VOICE: loud, dumb, happy — a kid's toy computer the dog boots up himself.
+IDEA: a retro desktop OS (ref lufutu.com) skinned in WHOOPY yellow/orange/sky-blue.
+PICTURE: the old site's looping 3D game scene as wallpaper; the dog lives in the windows.
+COLOUR and TYPE: #FFC123 yellow, #FF8F00 orange, #05C1FF sky, black ink, cream window paper; Pixelify Sans + Roboto.
+LAYOUT: icons left, windows centre, widgets right (playlist, CA, stats), taskbar bottom.
+*/
+@font-face{font-family:"Pixelify Sans";font-weight:400;src:url(assets/fonts/pixelify-sans-latin-400-normal.woff2) format("woff2")}
+@font-face{font-family:"Pixelify Sans";font-weight:600;src:url(assets/fonts/pixelify-sans-latin-600-normal.woff2) format("woff2")}
+@font-face{font-family:"Pixelify Sans";font-weight:700;src:url(assets/fonts/pixelify-sans-latin-700-normal.woff2) format("woff2")}
+@font-face{font-family:Roboto;font-weight:400;src:url(assets/fonts/roboto-latin-400-normal.woff2) format("woff2")}
+@font-face{font-family:Roboto;font-weight:700;src:url(assets/fonts/roboto-latin-700-normal.woff2) format("woff2")}
+:root{
+  --yellow:#FFC123;--lemon:#FFFA05;--orange:#FF8F00;--amber:#FFAF11;--sky:#05C1FF;
+  --ink:#000;--paper:#FFF6D9;--paper2:#FFE9A8;--red:#E8262B;
+  --px:"Pixelify Sans",ui-monospace,monospace;--sans:Roboto,system-ui,sans-serif;
+}
+*{box-sizing:border-box;min-width:0}
+html,body{margin:0;height:100%;overflow:hidden;background:#05C1FF;color:var(--ink);font:15px/1.5 var(--sans)}
+button{font:inherit;color:inherit;cursor:pointer}
+a{color:inherit}
+
+/* wallpaper */
+#bg{position:fixed;inset:0;width:100%;height:100%;object-fit:cover;z-index:0}
+.grain{position:fixed;inset:0;background:url(assets/giphy.gif) center/cover;mix-blend-mode:screen;opacity:.1;pointer-events:none;z-index:900}
+.crt{position:fixed;inset:0;pointer-events:none;z-index:901;background:repeating-linear-gradient(rgba(0,0,0,.08) 0 1px,transparent 1px 3px)}
+
+/* desktop icons */
+#icons{position:fixed;left:14px;top:14px;bottom:62px;display:grid;grid-template-columns:repeat(2,104px);grid-auto-rows:118px;gap:6px 8px;align-content:start;z-index:5}
+.ico{display:flex;flex-direction:column;align-items:center;gap:6px;background:none;border:0;padding:6px 2px;text-decoration:none}
+.ico .pic{width:60px;height:60px;display:grid;place-items:center;filter:drop-shadow(3px 3px 0 rgba(0,0,0,.55));transition:transform .12s}
+.ico .pic img,.ico .pic svg{width:100%;height:100%;image-rendering:pixelated}
+.ico .lbl{font:600 15px/1.1 var(--px);background:var(--yellow);border:2px solid var(--ink);padding:3px 7px;box-shadow:2px 2px 0 var(--ink);text-align:center;max-width:100px}
+.ico:hover .pic{transform:translateY(-3px) rotate(-4deg)}
+.ico:focus-visible .lbl,.ico.sel .lbl{background:var(--ink);color:var(--yellow)}
+.ico:focus-visible{outline:none}
+
+/* windows */
+.win{position:fixed;background:var(--paper);border:3px solid var(--ink);box-shadow:6px 6px 0 rgba(0,0,0,.85);display:flex;flex-direction:column;z-index:20;max-width:calc(100vw - 16px);max-height:calc(100vh - 72px)}
+.win[hidden]{display:none}
+.win.max{left:8px!important;top:8px!important;width:calc(100vw - 16px)!important;height:calc(100vh - 72px)!important}
+.bar{display:flex;align-items:center;gap:8px;height:34px;padding:0 6px 0 8px;background:var(--ink);color:var(--yellow);cursor:grab;user-select:none;touch-action:none;flex:none}
+.win:not(.front) .bar{background:#3a3a3a;color:#d9c48a}
+.bar .t{flex:1;text-align:center;font:600 16px/1 var(--px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar .mini{width:18px;height:18px;object-fit:cover;image-rendering:pixelated}
+.bar button{width:24px;height:22px;border:2px solid var(--ink);background:var(--yellow);color:var(--ink);font:700 14px/1 var(--px);padding:0;display:grid;place-items:center;outline-offset:1px}
+.bar button:hover{background:var(--lemon)}
+.bar button.x:hover{background:var(--red);color:#fff}
+.body{flex:1;overflow:auto;padding:20px;background:repeating-linear-gradient(transparent 0 2px,rgba(255,175,17,.10) 2px 3px),var(--paper)}
+h2{font:700 30px/1.05 var(--px);margin:0 0 8px}
+h3{font:700 19px/1.1 var(--px);margin:18px 0 8px}
+p{margin:0 0 10px}
+.px{font-family:var(--px)}
+.btn{display:inline-flex;align-items:center;gap:8px;font:700 16px/1 var(--px);background:var(--yellow);border:2px solid var(--ink);box-shadow:3px 3px 0 var(--ink);padding:10px 14px;text-decoration:none;min-height:44px}
+.btn:hover{background:var(--lemon);transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(--ink)}
+.btn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
+.btn.dark{background:var(--ink);color:var(--yellow)}
+.row{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+
+/* welcome */
+.hello{display:grid;grid-template-columns:150px 1fr;gap:20px;align-items:start}
+.avatar{width:150px;height:150px;border:3px solid var(--ink);border-radius:50%;background:var(--sky);overflow:hidden;box-shadow:4px 4px 0 var(--ink)}
+.avatar img{width:100%;height:100%;object-fit:cover;object-position:50% 12%;transform:scale(1.15);animation:wiggle 2s ease-in-out infinite}
+@keyframes wiggle{0%,100%{rotate:0deg}25%{rotate:-4deg}75%{rotate:4deg}}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:6px}
+.stat{background:var(--yellow);border:2px solid var(--ink);padding:8px 4px;text-align:center;box-shadow:2px 2px 0 var(--ink)}
+.stat b{display:block;font:700 26px/1 var(--px)}
+.stat span{font:600 12px/1.2 var(--px);text-transform:uppercase}
+
+/* buy */
+.ca{display:flex;gap:8px;align-items:stretch;margin:8px 0 14px}
+.ca code{flex:1;background:#fff;border:2px solid var(--ink);padding:10px;font:600 13px/1.3 var(--px);overflow-wrap:anywhere}
+.jup{width:100%;height:460px;border:2px solid var(--ink);background:#13151f;display:block}
+.toast{position:fixed;left:50%;bottom:76px;translate:-50% 0;background:var(--ink);color:var(--yellow);font:600 16px var(--px);padding:10px 16px;border:2px solid var(--yellow);z-index:1000;opacity:0;transition:opacity .2s;pointer-events:none}
+.toast.on{opacity:1}
+
+/* creatives */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.card{border:2px solid var(--ink);background:#fff;box-shadow:3px 3px 0 var(--ink);padding:0;display:flex;flex-direction:column;text-align:left}
+.card img{width:100%;aspect-ratio:1;object-fit:cover;background:var(--sky);display:block;border-bottom:2px solid var(--ink)}
+.card span{font:600 13px/1.2 var(--px);padding:7px 8px}
+.card.empty{aspect-ratio:auto;min-height:190px;display:grid;place-items:center;background:repeating-linear-gradient(45deg,var(--paper2) 0 10px,var(--paper) 10px 20px);font:600 14px var(--px);color:#6b5520}
+.viewer{display:grid;place-items:center;height:100%}
+.viewer img{max-width:100%;max-height:100%;border:2px solid var(--ink)}
+
+/* game */
+.game{display:flex;flex-direction:column;align-items:center;gap:10px}
+#cv{width:100%;max-width:420px;aspect-ratio:420/520;border:3px solid var(--ink);background:var(--sky);image-rendering:pixelated;touch-action:manipulation;display:block}
+.hint{font:600 14px var(--px);text-align:center}
+
+/* widgets */
+#widgets{position:fixed;right:14px;top:14px;width:300px;display:flex;flex-direction:column;gap:12px;z-index:5;max-height:calc(100vh - 76px);overflow:auto}
+.wg{background:var(--paper);border:3px solid var(--ink);box-shadow:5px 5px 0 rgba(0,0,0,.85)}
+.wg .wh{display:flex;align-items:center;gap:8px;background:var(--ink);color:var(--yellow);font:600 15px/1 var(--px);padding:8px 10px}
+.wg .wb{padding:10px 12px}
+.np{display:flex;gap:10px;align-items:center}
+.np .disc{width:52px;height:52px;border-radius:50%;border:2px solid var(--ink);background:conic-gradient(var(--yellow) 0 25%,var(--red) 0 50%,var(--sky) 0 75%,var(--orange) 0);flex:none;position:relative}
+.np .disc::after{content:"";position:absolute;inset:18px;border-radius:50%;background:var(--ink)}
+.playing .disc{animation:spin 2.4s linear infinite}
+@keyframes spin{to{rotate:360deg}}
+.np .now{flex:1;font:600 15px/1.2 var(--px)}
+.np .now small{display:block;font:400 12px var(--sans);color:#5c4a1a}
+.pbtn{width:44px;height:44px;border:2px solid var(--ink);background:var(--yellow);font:700 18px var(--px);box-shadow:2px 2px 0 var(--ink);flex:none}
+.prog{height:10px;border:2px solid var(--ink);background:#fff;margin:10px 0 8px}
+.prog i{display:block;height:100%;width:0;background:var(--orange)}
+.tracks{list-style:none;margin:0;padding:0;border-top:2px dashed #c8a24a}
+.tracks li{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:2px dashed #c8a24a;font:600 14px/1.2 var(--px)}
+.tracks li:last-child{border-bottom:0}
+.tracks li .n{width:22px;color:#a07a18}
+.tracks li .tt{flex:1}
+.tracks li .d{font:400 12px var(--sans);color:#7a6326}
+.tracks li.soon{opacity:.55}
+.tracks li.cur .tt{text-decoration:underline;text-decoration-thickness:2px}
+.tracks button{border:2px solid var(--ink);background:var(--yellow);width:30px;height:30px;font:700 13px var(--px);padding:0}
+.tracks li.soon button{background:#eee;cursor:not-allowed}
+.mini-ca{display:flex;gap:8px;align-items:center}
+.mini-ca code{flex:1;font:600 12px/1.2 var(--px);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* taskbar */
+#task{position:fixed;left:0;right:0;bottom:0;height:52px;background:var(--yellow);border-top:3px solid var(--ink);display:flex;align-items:center;gap:8px;padding:0 8px;z-index:800}
+#start{display:flex;align-items:center;gap:8px;height:38px;padding:0 12px 0 4px;background:var(--ink);color:var(--yellow);border:2px solid var(--ink);font:700 17px/1 var(--px)}
+#start img{width:30px;height:30px;border-radius:50%;background:var(--sky);object-fit:cover;object-position:50% 10%}
+#tabs{flex:1;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+#tabs button{height:38px;flex:none;max-width:200px;padding:0 12px;border:2px solid var(--ink);background:var(--paper);font:600 14px/1 var(--px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#tabs button.on{background:var(--ink);color:var(--yellow)}
+#tray{display:flex;align-items:center;gap:6px;font:600 15px/1 var(--px)}
+#tray button{height:38px;min-width:38px;border:2px solid var(--ink);background:var(--paper);font:700 15px var(--px)}
+#clock{padding:0 6px;text-align:right;line-height:1.05}
+#clock small{display:block;font-size:11px}
+
+/* boot */
+#boot{position:fixed;inset:0;z-index:2000;display:grid;place-items:center;background:rgba(0,0,0,.82);cursor:pointer}
+#boot .box{text-align:center;color:var(--yellow);font-family:var(--px)}
+#boot img{width:220px;border:3px solid var(--yellow);transform:rotate(-3deg);animation:wiggle 2s ease-in-out infinite;background:var(--sky)}
+#boot b{display:block;font:700 clamp(30px,6vw,52px)/1 var(--px);margin-top:22px;text-shadow:3px 3px 0 var(--orange)}
+#boot span{display:block;margin-top:10px;font-size:15px;color:#fff;opacity:.8}
+#boot.gone{display:none}
+
+:focus-visible{outline:3px solid var(--sky);outline-offset:2px}
+@media (max-width:1100px){#widgets{width:250px}}
+@media (max-width:860px){
+  #widgets{left:10px;right:10px;top:auto;bottom:62px;width:auto;max-height:46vh}
+  #widgets .wg+.wg{display:none}
+  #icons{grid-template-columns:repeat(4,minmax(0,1fr));right:10px;left:10px;top:10px;bottom:auto;grid-auto-rows:104px}
+  .win{left:6px!important;top:6px!important;width:calc(100vw - 12px)!important;height:calc(100vh - 66px)!important}
+  .hello{grid-template-columns:1fr}.avatar{width:110px;height:110px}
+  .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+  #tabs button{max-width:120px}
+  #clock small{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<video id="bg" src="assets/bg.mp4" poster="assets/bg-poster.jpg" autoplay muted loop playsinline></video>
+<div class="grain"></div><div class="crt"></div>
+
+<!-- DESKTOP ICONS -->
+<nav id="icons" aria-label="Desktop">
+  <button class="ico" data-open="about"><span class="pic"><img src="assets/dog-150x150.png" alt=""></span><span class="lbl">About me</span></button>
+  <button class="ico" data-open="buy"><span class="pic"><svg viewBox="0 0 16 16" shape-rendering="crispEdges"><rect x="4" y="1" width="8" height="1"/><rect x="2" y="2" width="12" height="12" fill="#000"/><rect x="3" y="3" width="10" height="10" fill="#FFC123"/><rect x="4" y="2" width="8" height="1" fill="#FFFA05"/><rect x="4" y="14" width="8" height="1"/><rect x="1" y="4" width="1" height="8"/><rect x="14" y="4" width="1" height="8"/><rect x="7" y="4" width="2" height="8"/><rect x="5" y="5" width="6" height="1"/><rect x="5" y="5" width="1" height="3"/><rect x="5" y="7" width="6" height="1"/><rect x="10" y="7" width="1" height="3"/><rect x="5" y="9" width="6" height="1"/></svg></span><span class="lbl">Buy $WHOOPY</span></button>
+  <a class="ico" href="https://x.com/WhoopSolana" target="_blank" rel="noopener"><span class="pic"><svg viewBox="0 0 16 16" shape-rendering="crispEdges"><rect x="1" y="1" width="14" height="14"/><rect x="2" y="2" width="12" height="12" fill="#fff"/><rect x="3" y="3" width="10" height="10"/><g fill="#fff"><rect x="4" y="4" width="2" height="1"/><rect x="5" y="5" width="2" height="1"/><rect x="6" y="6" width="2" height="1"/><rect x="7" y="7" width="2" height="2"/><rect x="8" y="9" width="2" height="1"/><rect x="9" y="10" width="2" height="1"/><rect x="10" y="11" width="2" height="1"/><rect x="11" y="4" width="1" height="1"/><rect x="10" y="5" width="1" height="1"/><rect x="9" y="6" width="1" height="1"/><rect x="6" y="9" width="1" height="1"/><rect x="5" y="10" width="1" height="1"/><rect x="4" y="11" width="1" height="1"/></g></svg></span><span class="lbl">X / Twitter</span></a>
+  <a class="ico" href="https://t.me/WhoopySol" target="_blank" rel="noopener"><span class="pic"><svg viewBox="0 0 16 16" shape-rendering="crispEdges"><rect x="1" y="1" width="14" height="14"/><rect x="2" y="2" width="12" height="12" fill="#05C1FF"/><g fill="#fff"><rect x="3" y="7" width="3" height="1"/><rect x="4" y="6" width="5" height="1"/><rect x="6" y="5" width="5" height="1"/><rect x="9" y="4" width="3" height="1"/><rect x="11" y="5" width="1" height="5"/><rect x="6" y="8" width="2" height="3"/><rect x="8" y="9" width="3" height="1"/></g></svg></span><span class="lbl">Telegram</span></a>
+  <button class="ico" data-open="creatives"><span class="pic"><svg viewBox="0 0 16 16" shape-rendering="crispEdges"><rect x="1" y="3" width="6" height="2"/><rect x="1" y="4" width="14" height="10"/><rect x="2" y="4" width="4" height="1" fill="#FF8F00"/><rect x="2" y="6" width="12" height="7" fill="#FFC123"/><rect x="2" y="6" width="12" height="1" fill="#FFFA05"/><rect x="6" y="8" width="4" height="4" fill="#05C1FF"/><rect x="7" y="9" width="2" height="2" fill="#E8262B"/></svg></span><span class="lbl">Creatives</span></button>
+  <button class="ico" data-open="game"><span class="pic"><svg viewBox="0 0 16 16" shape-rendering="crispEdges"><rect x="1" y="5" width="14" height="7"/><rect x="2" y="6" width="12" height="5" fill="#E8262B"/><rect x="3" y="8" width="3" height="1" fill="#fff"/><rect x="4" y="7" width="1" height="3" fill="#fff"/><rect x="10" y="7" width="1" height="1" fill="#FFC123"/><rect x="12" y="8" width="1" height="1" fill="#05C1FF"/><rect x="2" y="12" width="3" height="1"/><rect x="11" y="12" width="3" height="1"/></svg></span><span class="lbl">Propeller Run</span></button>
+  <a class="ico" href="https://dexscreener.com/solana/Zpt8Jdr32tvsCqjfHDgbsJwdSjqXkS6HGLyQBDNpump" target="_blank" rel="noopener"><span class="pic"><svg viewBox="0 0 16 16" shape-rendering="crispEdges"><rect x="1" y="1" width="14" height="14"/><rect x="2" y="2" width="12" height="12" fill="#FFF6D9"/><rect x="3" y="10" width="2" height="3" fill="#05C1FF"/><rect x="6" y="7" width="2" height="6" fill="#FFC123"/><rect x="9" y="8" width="2" height="5" fill="#FF8F00"/><rect x="12" y="4" width="1" height="9" fill="#E8262B"/><rect x="3" y="13" width="10" height="1"/></svg></span><span class="lbl">Chart</span></a>
+  <button class="ico" data-open="readme"><span class="pic"><svg viewBox="0 0 16 16" shape-rendering="crispEdges"><rect x="3" y="1" width="10" height="14"/><rect x="4" y="2" width="8" height="12" fill="#fff"/><g fill="#000"><rect x="5" y="4" width="6" height="1"/><rect x="5" y="6" width="5" height="1"/><rect x="5" y="8" width="6" height="1"/><rect x="5" y="10" width="4" height="1"/></g><rect x="10" y="11" width="2" height="2" fill="#FFC123"/></svg></span><span class="lbl">readme.txt</span></button>
+</nav>
+
+<!-- WINDOWS -->
+<section class="win" id="w-about" data-title="Welcome to WHOOPY OS" data-icon="assets/dog-150x150.png" style="left:250px;top:40px;width:640px;height:560px" hidden>
+  <div class="body">
+    <div class="hello">
+      <div class="avatar"><img src="assets/dog.png" alt="Whoopy, the dog wif propeller"></div>
+      <div>
+        <p class="px" style="font-size:17px;margin:0 0 4px">DOG WIF PROPELLER</p>
+        <h2>I'm $WHOOPY</h2>
+        <p>Get to the chopper with Dog wif Propeller on the Solana network. Enjoy the in-flight snacks and watch your portfolio soar to new heights with the pawsitively based wing pup. No more tailspin, just tail wagging gains.</p>
+        <p class="px">Click the icons on the desktop :D</p>
+      </div>
+    </div>
+    <h3>Flight stats</h3>
+    <div class="stats">
+      <div class="stat"><b>0%</b><span>Taxes</span></div>
+      <div class="stat"><b>CA</b><span>Renounced</span></div>
+      <div class="stat"><b>LP</b><span>Burned</span></div>
+      <div class="stat"><b>1B</b><span>Supply</span></div>
+    </div>
+    <div class="row">
+      <button class="btn" data-open="buy">Buy $WHOOPY</button>
+      <a class="btn dark" href="https://x.com/WhoopSolana" target="_blank" rel="noopener">Follow on X</a>
+      <a class="btn" href="https://t.me/WhoopySol" target="_blank" rel="noopener">Telegram</a>
+    </div>
+  </div>
+</section>
+
+<section class="win" id="w-buy" data-title="Buy $WHOOPY — Jupiter" data-icon="assets/dog-150x150.png" style="left:300px;top:60px;width:560px;height:640px" hidden>
+  <div class="body">
+    <h2>Buy $WHOOPY</h2>
+    <p class="px">Buy some of da dog wif propeller straight here on our web… or use the links below, it's up to you dawg!</p>
+    <div class="ca"><code id="ca">Zpt8Jdr32tvsCqjfHDgbsJwdSjqXkS6HGLyQBDNpump</code><button class="btn" data-copy>Copy CA</button></div>
+    <iframe class="jup" title="Jupiter swap" loading="lazy" allow="clipboard-read *; clipboard-write *" src="https://jup.ag/swap/SOL-Zpt8Jdr32tvsCqjfHDgbsJwdSjqXkS6HGLyQBDNpump"></iframe>
+    <div class="row">
+      <a class="btn" href="https://raydium.io/swap/?inputMint=sol&amp;outputMint=Zpt8Jdr32tvsCqjfHDgbsJwdSjqXkS6HGLyQBDNpump" target="_blank" rel="noopener">Raydium</a>
+      <a class="btn" href="https://dexscreener.com/solana/Zpt8Jdr32tvsCqjfHDgbsJwdSjqXkS6HGLyQBDNpump" target="_blank" rel="noopener">Dexscreener</a>
+      <a class="btn" href="https://www.dextools.io/app/en/solana/pair-explorer/zJgW9jCvjvUZ7iCtEjtBmGhxcmhQCbXt63rpCtj4Guk" target="_blank" rel="noopener">Dextools</a>
+    </div>
+  </div>
+</section>
+
+<section class="win" id="w-creatives" data-title="C:\WHOOPY\creatives" data-icon="assets/dog-150x150.png" style="left:280px;top:70px;width:680px;height:560px" hidden>
+  <div class="body">
+    <h2>Creatives</h2>
+    <p>Memes, stickers and banners. Click to open. More coming soon.</p>
+    <div class="grid" id="gallery"></div>
+  </div>
+</section>
+
+<section class="win" id="w-view" data-title="viewer.exe" data-icon="assets/dog-150x150.png" style="left:340px;top:50px;width:560px;height:620px" hidden>
+  <div class="body viewer"><img id="viewimg" alt=""></div>
+</section>
+
+<section class="win" id="w-game" data-title="Propeller Run.exe" data-icon="assets/dog-150x150.png" style="left:330px;top:30px;width:480px;height:680px" hidden>
+  <div class="body game">
+    <canvas id="cv" width="420" height="520"></canvas>
+    <p class="hint">Click / Space / Tap — spin the propeller. Dodge the lollipops.</p>
+  </div>
+</section>
+
+<section class="win" id="w-readme" data-title="readme.txt — Notepad" data-icon="assets/dog-150x150.png" style="left:360px;top:90px;width:460px;height:380px" hidden>
+  <div class="body px" style="font-size:16px;line-height:1.5;white-space:pre-wrap">WOOP WOOP.
+
+$WHOOPY is a meme coin with no intrinsic value
+or expectation of financial return.
+It's a dog. Wif a propeller. That's it.
+
+contact: INFO@whoopy.xyz</div>
+</section>
+
+<!-- WIDGETS -->
+<aside id="widgets">
+  <div class="wg">
+    <div class="wh">♪ Whoopy Radio</div>
+    <div class="wb">
+      <div class="np" id="np">
+        <div class="disc"></div>
+        <div class="now"><span id="nowT">WHOOPY Theme</span><small id="nowS">Press ▶ to woop</small></div>
+        <button class="pbtn" id="play" aria-label="Play">▶</button>
+      </div>
+      <div class="prog"><i id="bar"></i></div>
+      <ul class="tracks" id="tracks"></ul>
+    </div>
+  </div>
+  <div class="wg">
+    <div class="wh">⧉ Contract</div>
+    <div class="wb mini-ca"><code>Zpt8Jdr3…DNpump</code><button class="btn" data-copy style="min-height:36px;padding:6px 10px;font-size:14px">Copy</button></div>
+  </div>
+  <div class="wg">
+    <div class="wh">✈ Flight status</div>
+    <div class="wb px" style="font-size:15px;line-height:1.6">Altitude: rising<br>Snacks on board: 1 lollipop<br>Propeller: spinning</div>
+  </div>
+</aside>
+
+<!-- TASKBAR -->
+<footer id="task">
+  <button id="start" data-open="about"><img src="assets/dog.png" alt="">WHOOPY</button>
+  <div id="tabs"></div>
+  <div id="tray">
+    <button id="mute" aria-label="Sound">♪ ON</button>
+    <div id="clock"><span id="time">--:--</span><small>SOL</small></div>
+  </div>
+</footer>
+
+<div id="boot"><div class="box"><img src="assets/dog-lollipop.png" alt=""><b>CLICK TO BOOT</b><span>WHOOPY OS v1.0 — sound on</span></div></div>
+<div class="toast" id="toast">Contract copied!</div>
+<audio id="aud" preload="none"></audio>
+
+<script>
+{
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const CA='Zpt8Jdr32tvsCqjfHDgbsJwdSjqXkS6HGLyQBDNpump';
+const mobile=()=>matchMedia('(max-width:860px)').matches;
+
+/* ---------- windows ---------- */
+let z=30;
+const tabs=$('#tabs');
+function front(w){$$('.win').forEach(x=>x.classList.remove('front'));w.classList.add('front');w.style.zIndex=++z;syncTabs()}
+function open(id){const w=$('#w-'+id);if(!w)return;w.hidden=false;front(w);if(id==='game')Game.ready()}
+function close(w){w.hidden=true;w.classList.remove('front');if(w.id==='w-game')Game.stop();syncTabs()}
+function syncTabs(){
+  tabs.innerHTML='';
+  $$('.win').filter(w=>!w.hidden||w.dataset.min).forEach(w=>{
+    const b=document.createElement('button');b.textContent=w.dataset.title;
+    if(w.classList.contains('front')&&!w.hidden)b.className='on';
+    b.onclick=()=>{if(w.hidden){w.hidden=false;delete w.dataset.min;front(w)}else if(w.classList.contains('front')){w.hidden=true;w.dataset.min=1;w.classList.remove('front');syncTabs()}else front(w)};
+    tabs.appendChild(b)});
+}
+$$('.win').forEach(w=>{
+  const bar=document.createElement('div');bar.className='bar';
+  bar.innerHTML=`<img class="mini" src="${w.dataset.icon}" alt=""><span class="t"></span><button aria-label="Minimize">_</button><button aria-label="Maximize">□</button><button class="x" aria-label="Close">×</button>`;
+  bar.querySelector('.t').textContent=w.dataset.title;
+  w.prepend(bar);
+  const [bMin,bMax,bX]=bar.querySelectorAll('button');
+  bMin.onclick=e=>{e.stopPropagation();w.hidden=true;w.dataset.min=1;w.classList.remove('front');syncTabs()};
+  bMax.onclick=e=>{e.stopPropagation();w.classList.toggle('max')};
+  bX.onclick=e=>{e.stopPropagation();delete w.dataset.min;close(w)};
+  w.addEventListener('pointerdown',()=>front(w));
+  let sx,sy,ox,oy,drag=false;
+  bar.addEventListener('pointerdown',e=>{if(e.target.closest('button')||mobile()||w.classList.contains('max'))return;drag=true;sx=e.clientX;sy=e.clientY;ox=w.offsetLeft;oy=w.offsetTop;bar.setPointerCapture(e.pointerId);bar.style.cursor='grabbing'});
+  bar.addEventListener('pointermove',e=>{if(!drag)return;
+    const nx=Math.min(Math.max(ox+e.clientX-sx,-w.offsetWidth+120),innerWidth-120);
+    const ny=Math.min(Math.max(oy+e.clientY-sy,0),innerHeight-100);
+    w.style.left=nx+'px';w.style.top=ny+'px'});
+  bar.addEventListener('pointerup',()=>{drag=false;bar.style.cursor=''});
+  bar.addEventListener('dblclick',e=>{if(!e.target.closest('button'))w.classList.toggle('max')});
+});
+// icons: single click selects + opens (double-click feel on desktop, tap on mobile)
+$$('[data-open]').forEach(b=>b.addEventListener('click',e=>{
+  $$('.ico').forEach(i=>i.classList.remove('sel'));if(b.classList.contains('ico'))b.classList.add('sel');
+  open(b.dataset.open)}));
+
+/* ---------- copy CA ---------- */
+const toast=$('#toast');
+$$('[data-copy]').forEach(b=>b.addEventListener('click',async()=>{
+  try{await navigator.clipboard.writeText(CA);toast.textContent='Contract copied!'}
+  catch{const r=document.createRange();r.selectNodeContents($('#ca'));getSelection().removeAllRanges();getSelection().addRange(r);toast.textContent='Selected — press Ctrl/Cmd+C'}
+  toast.classList.add('on');setTimeout(()=>toast.classList.remove('on'),1600)}));
+
+/* ---------- creatives ---------- */
+const art=[
+  ['assets/dog.png','whoopy_official.png'],
+  ['assets/dog-lollipop.png','lollipop_mode.png'],
+  ['assets/propeller-dog.jpg','propeller_closeup.jpg'],
+  ['assets/giphy.gif','woop_woop.gif'],
+];
+const gal=$('#gallery');
+gal.innerHTML=art.map(([s,n],i)=>`<button class="card" data-i="${i}"><img src="${s}" alt="" loading="lazy"><span></span></button>`).join('')+
+  Array.from({length:4},()=>`<div class="card empty">soon™</div>`).join('');
+gal.querySelectorAll('button.card').forEach(c=>{const [s,n]=art[c.dataset.i];c.querySelector('span').textContent=n;
+  c.onclick=()=>{$('#viewimg').src=s;const v=$('#w-view');v.dataset.title=n;v.querySelector('.t').textContent=n;open('view')}});
+
+/* ---------- radio ---------- */
+const tracks=[
+  {t:'WHOOPY Theme',d:'woop woop',src:'assets/theme.mp3',start:45},
+  {t:'Track 02',d:'coming soon'},
+  {t:'Track 03',d:'coming soon'},
+  {t:'Track 04',d:'coming soon'},
+  {t:'Track 05',d:'coming soon'},
+];
+const aud=$('#aud');aud.volume=.3;aud.loop=true;
+let cur=0,muted=false;
+const list=$('#tracks');
+list.innerHTML=tracks.map((k,i)=>`<li class="${k.src?'':'soon'}" data-i="${i}"><span class="n">${String(i+1).padStart(2,'0')}</span><span class="tt"></span><span class="d"></span><button aria-label="Play">▶</button></li>`).join('');
+list.querySelectorAll('li').forEach(li=>{const k=tracks[li.dataset.i];li.querySelector('.tt').textContent=k.t;li.querySelector('.d').textContent=k.d;
+  li.querySelector('button').onclick=()=>{if(k.src)play(+li.dataset.i)}});
+function play(i,fromBoot){
+  const k=tracks[i];if(!k.src)return;
+  if(cur!==i||!aud.src){cur=i;aud.src=k.src;aud.addEventListener('loadedmetadata',()=>{if(k.start)aud.currentTime=k.start},{once:true})}
+  aud.play().catch(()=>{});ui()}
+function ui(){
+  const on=!aud.paused;$('#np').classList.toggle('playing',on);$('#play').textContent=on?'❚❚':'▶';
+  $('#nowT').textContent=tracks[cur].t;$('#nowS').textContent=on?'now playing':'paused';
+  list.querySelectorAll('li').forEach(li=>li.classList.toggle('cur',+li.dataset.i===cur))}
+$('#play').onclick=()=>{if(aud.paused)play(cur);else{aud.pause();ui()}};
+aud.addEventListener('play',ui);aud.addEventListener('pause',ui);
+aud.addEventListener('timeupdate',()=>{if(aud.duration)$('#bar').style.width=(aud.currentTime/aud.duration*100)+'%'});
+$('#mute').onclick=()=>{muted=!muted;aud.muted=muted;$('#mute').textContent=muted?'♪ OFF':'♪ ON'};
+
+/* ---------- clock ---------- */
+const tick=()=>{$('#time').textContent=new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})};tick();setInterval(tick,15000);
+
+/* ---------- boot ---------- */
+$('#boot').addEventListener('click',()=>{$('#boot').classList.add('gone');play(0,true);open('about')});
+
+/* ---------- game: Propeller Run ---------- */
+var Game=(()=>{
+  const cv=$('#cv'),c=cv.getContext('2d'),W=420,H=520;
+  const dog=new Image();dog.src='assets/dog-150x150.png';
+  let st='ready',y,vy,pipes,score,t,raf,best=0;
+  try{best=+localStorage.getItem('whoopy-best')||0}catch{}
+  function reset(){y=H/2;vy=0;pipes=[];score=0;t=0}
+  function flap(){if(st==='ready'||st==='over'){reset();st='play';loop()}else vy=-6.6}
+  function loop(){cancelAnimationFrame(raf);step();draw();if(st==='play')raf=requestAnimationFrame(loop)}
+  function step(){
+    t++;vy+=.36;y+=vy;
+    if(t%92===1){const gap=150,top=60+Math.random()*(H-gap-140);pipes.push({x:W+20,top,gap,done:false})}
+    pipes.forEach(p=>p.x-=2.6);pipes=pipes.filter(p=>p.x>-60);
+    for(const p of pipes){
+      if(!p.done&&p.x+26<90){p.done=true;score++}
+      const hitX=p.x<118&&p.x+26>72, hitY=y-20<p.top||y+20>p.top+p.gap;
+      if(hitX&&hitY)return over()}
+    if(y>H-28||y<10)over()}
+  function over(){st='over';if(score>best){best=score;try{localStorage.setItem('whoopy-best',best)}catch{}}}
+  function lolli(x,top,bottom,flip){
+    c.fillStyle='#fff';c.fillRect(x+10,top,6,bottom-top);c.strokeStyle='#000';c.lineWidth=2;c.strokeRect(x+10,top,6,bottom-top);
+    const cy=flip?bottom:top;c.beginPath();c.arc(x+13,cy,22,0,7);c.fillStyle='#FFC123';c.fill();c.stroke();
+    c.beginPath();c.arc(x+13,cy,14,0,7);c.fillStyle='#E8262B';c.fill();c.beginPath();c.arc(x+13,cy,7,0,7);c.fillStyle='#05C1FF';c.fill()}
+  function draw(){
+    c.fillStyle='#05C1FF';c.fillRect(0,0,W,H);
+    c.fillStyle='rgba(255,255,255,.35)';for(let i=0;i<5;i++){const cx=((i*120)-t*.6)%(W+120);c.fillRect((cx+W+120)%(W+120)-60,40+i*70,70,14)}
+    pipes.forEach(p=>{lolli(p.x,0,p.top,true);lolli(p.x,p.top+p.gap,H,false)});
+    c.fillStyle='#FFC123';c.fillRect(0,H-20,W,20);c.fillStyle='#000';c.fillRect(0,H-22,W,3);
+    c.save();c.translate(95,y);c.rotate(Math.max(-.4,Math.min(.6,vy/14)));
+    if(dog.complete)c.drawImage(dog,-30,-30,60,60);c.restore();
+    c.fillStyle='#000';c.font='700 34px "Pixelify Sans",monospace';c.textAlign='center';c.fillText(score,W/2,52);
+    if(st!=='play'){c.fillStyle='rgba(0,0,0,.6)';c.fillRect(30,H/2-80,W-60,150);c.fillStyle='#FFC123';
+      c.font='700 30px "Pixelify Sans",monospace';c.fillText(st==='over'?'TAILSPIN!':'PROPELLER RUN',W/2,H/2-30);
+      c.font='600 18px "Pixelify Sans",monospace';c.fillStyle='#fff';c.fillText(st==='over'?'score '+score+' · best '+best:'best '+best,W/2,H/2+5);
+      c.fillText('click to fly',W/2,H/2+40)}}
+  cv.addEventListener('pointerdown',e=>{e.preventDefault();flap()});
+  addEventListener('keydown',e=>{if(e.code==='Space'&&!$('#w-game').hidden&&$('#w-game').classList.contains('front')){e.preventDefault();flap()}});
+  return{ready(){if(st!=='play'){st='ready';reset();dog.complete?draw():dog.onload=draw}},stop(){cancelAnimationFrame(raf);if(st==='play')st='ready'}};
+})();
+}
+</script>
+</body>
+</html>
