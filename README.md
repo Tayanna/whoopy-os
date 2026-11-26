@@ -35,7 +35,7 @@ assets/
   avatar*.png/jpg           avatar (about window, window icons)
   favicon.ico, favicon-32.png, apple-touch-icon.png
   og.jpg                    link preview image (1200×630)
-  dog-150x150.png           cutout dog (desktop icon, marquee, game sprite)
+  dog-cutout.png            cutout dog (desktop icon, marquee, game sprite)
   dog.png, dog-lollipop.png, propeller-dog.jpg, giphy.gif   gallery / boot screen / grain overlay
   theme.mp3                 radio track
   fonts/                    Pixelify Sans + Roboto (woff2, self-hosted)

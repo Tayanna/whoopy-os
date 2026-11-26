@@ -55,6 +55,7 @@ a{color:inherit}
 .ico{display:flex;flex-direction:column;align-items:center;gap:6px;background:none;border:0;padding:6px 2px;text-decoration:none}
 .ico .pic{width:60px;height:60px;display:grid;place-items:center;filter:drop-shadow(3px 3px 0 rgba(0,0,0,.55));transition:transform .12s}
 .ico .pic img,.ico .pic svg{width:100%;height:100%;image-rendering:pixelated}
+.ico .pic img.dog{image-rendering:auto;transform:scale(1.25);transform-origin:50% 70%}
 .ico .pic img.ava{border:3px solid var(--ink);image-rendering:auto;object-fit:cover}
 .ico .lbl{font:600 15px/1.1 var(--px);background:var(--yellow);border:2px solid var(--ink);padding:3px 7px;box-shadow:2px 2px 0 var(--ink);text-align:center;max-width:100px}
 .ico:hover .pic{transform:translateY(-3px) rotate(-4deg)}
@@ -147,7 +148,7 @@ p{margin:0 0 10px}
 #task{position:fixed;left:0;right:0;bottom:0;height:52px;background:var(--yellow);border-top:3px solid var(--ink);overflow:hidden;z-index:800;display:flex;align-items:center}
 .mq{display:flex;width:max-content;animation:mq 28s linear infinite}
 .mq span{flex:none;display:flex;align-items:center;gap:18px;padding-right:18px;font:700 26px/1 var(--px);white-space:nowrap;letter-spacing:.02em}
-.mq img{flex:none;height:44px;width:44px;object-fit:contain;margin-top:4px;animation:shake .5s ease-in-out infinite;transform-origin:50% 90%}
+.mq img{flex:none;height:50px;width:50px;object-fit:contain;margin-top:4px;animation:shake .5s ease-in-out infinite;transform-origin:50% 90%}
 .mq span:nth-child(2n) img{animation-delay:-.25s}
 @keyframes mq{to{transform:translateX(-50%)}}
 @keyframes shake{0%,100%{transform:translate(-3px,0) rotate(-8deg)}25%{transform:translate(0,-5px) rotate(0)}50%{transform:translate(3px,0) rotate(8deg)}75%{transform:translate(0,-5px) rotate(0)}}
@@ -187,7 +188,7 @@ p{margin:0 0 10px}
 <div id="ui">
 <!-- DESKTOP ICONS -->
 <nav id="icons" aria-label="Desktop">
-  <button class="ico" data-open="about"><span class="pic"><img src="assets/dog-150x150.png" alt=""></span><span class="lbl">Woop woop</span></button>
+  <button class="ico" data-open="about"><span class="pic"><img class="dog" src="assets/dog-cutout.png" alt=""></span><span class="lbl">Woop woop</span></button>
   <button class="ico" data-open="buy"><span class="pic"><svg viewBox="0 0 16 16" shape-rendering="crispEdges"><rect x="4" y="1" width="8" height="1"/><rect x="2" y="2" width="12" height="12" fill="#000"/><rect x="3" y="3" width="10" height="10" fill="#FFC123"/><rect x="4" y="2" width="8" height="1" fill="#FFFA05"/><rect x="4" y="14" width="8" height="1"/><rect x="1" y="4" width="1" height="8"/><rect x="14" y="4" width="1" height="8"/><rect x="7" y="4" width="2" height="8"/><rect x="5" y="5" width="6" height="1"/><rect x="5" y="5" width="1" height="3"/><rect x="5" y="7" width="6" height="1"/><rect x="10" y="7" width="1" height="3"/><rect x="5" y="9" width="6" height="1"/></svg></span><span class="lbl">Buy $WOOPY</span></button>
   <a class="ico" href="https://pump.fun/coin/Zpt8Jdr32tvsCqjfHDgbsJwdSjqXkS6HGLyQBDNpump" target="_blank" rel="noopener"><span class="pic"><svg viewBox="0 0 16 16" shape-rendering="crispEdges"><g transform="rotate(-40 8 8)"><rect x="1" y="5" width="14" height="6" rx="0"/><rect x="2" y="6" width="6" height="4" fill="#fff"/><rect x="8" y="6" width="6" height="4" fill="#53D769"/><rect x="3" y="6" width="3" height="1" fill="#e6e6e6"/><rect x="9" y="6" width="3" height="1" fill="#9BF0A8"/><rect x="7" y="5" width="2" height="6"/></g></svg></span><span class="lbl">pump.fun</span></a>
   <a class="ico" href="https://fomo.family/" target="_blank" rel="noopener"><span class="pic"><svg viewBox="0 0 24 24" shape-rendering="crispEdges"><rect x="0" y="0" width="24" height="24"/><rect x="1" y="1" width="22" height="22" fill="#0B091F"/><g fill="#EAEDFF"><rect x="7" y="6" width="4" height="1"/><rect x="15" y="6" width="4" height="1"/><rect x="5" y="7" width="7" height="1"/><rect x="14" y="7" width="6" height="1"/><rect x="4" y="8" width="17" height="1"/><rect x="9" y="9" width="3" height="1"/><rect x="17" y="9" width="4" height="1"/><rect x="8" y="10" width="3" height="1"/><rect x="17" y="10" width="4" height="1"/><rect x="8" y="11" width="3" height="1"/><rect x="17" y="11" width="4" height="1"/><rect x="7" y="12" width="4" height="1"/><rect x="16" y="12" width="5" height="1"/><rect x="7" y="13" width="4" height="1"/><rect x="16" y="13" width="5" height="1"/><rect x="7" y="14" width="4" height="1"/><rect x="15" y="14" width="5" height="1"/><rect x="3" y="15" width="16" height="1"/><rect x="4" y="16" width="6" height="1"/><rect x="12" y="16" width="6" height="1"/><rect x="5" y="17" width="4" height="1"/><rect x="13" y="17" width="4" height="1"/></g></svg></span><span class="lbl">FOMO</span></a>
@@ -393,7 +394,7 @@ aud.addEventListener('play',ui);aud.addEventListener('pause',ui);
 aud.addEventListener('timeupdate',()=>{if(aud.duration)$('#bar').style.width=(aud.currentTime/aud.duration*100)+'%'});
 
 /* ---------- clock ---------- */
-const mq=$('#mq');const unit=Array.from({length:8},()=>'<span>WOOP WOOP<img src="assets/dog-150x150.png" alt=""></span>').join('');mq.innerHTML=unit+unit;
+const mq=$('#mq');const unit=Array.from({length:8},()=>'<span>WOOP WOOP<img src="assets/dog-cutout.png" alt=""></span>').join('');mq.innerHTML=unit+unit;
 
 /* ---------- boot ---------- */
 $('#boot').addEventListener('click',()=>{$('#boot').classList.add('gone');play(0);open('about')});
@@ -401,7 +402,7 @@ $('#boot').addEventListener('click',()=>{$('#boot').classList.add('gone');play(0
 /* ---------- game: Propeller Run ---------- */
 var Game=(()=>{
   const cv=$('#cv'),c=cv.getContext('2d'),W=420,H=520;
-  const dog=new Image();dog.src='assets/dog-150x150.png';
+  const dog=new Image();dog.src='assets/dog-cutout.png';
   let st='ready',y,vy,pipes,score,t,raf,best=0;
   try{best=+localStorage.getItem('whoopy-best')||0}catch{}
   function reset(){y=H/2;vy=0;pipes=[];score=0;t=0}
