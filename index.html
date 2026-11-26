@@ -387,15 +387,16 @@ $('#boot').addEventListener('click',()=>{$('#boot').classList.add('gone');play(0
 var Game=(()=>{
   const cv=$('#cv'),c=cv.getContext('2d'),W=420,H=520;
   const dog=new Image();dog.src='assets/dog-cutout.png';
-  let st='ready',y,vy,pipes,score,t,raf,best=0;
+  let st='ready',y,vy,pipes,score,t,raf,last=0,spawn=0,best=0;
   try{best=+localStorage.getItem('whoopy-best')||0}catch{}
-  function reset(){y=H/2;vy=0;pipes=[];score=0;t=0}
+  function reset(){y=H/2;vy=0;pipes=[];score=0;t=0;spawn=0;last=0}
   function flap(){if(st==='ready'||st==='over'){reset();st='play';loop()}else vy=-6.6}
-  function loop(){cancelAnimationFrame(raf);step();draw();if(st==='play')raf=requestAnimationFrame(loop)}
-  function step(){
-    t++;vy+=.36;y+=vy;
-    if(t%92===1){const gap=150,top=60+Math.random()*(H-gap-140);pipes.push({x:W+20,top,gap,done:false})}
-    pipes.forEach(p=>p.x-=2.6);pipes=pipes.filter(p=>p.x>-60);
+  // time-based: physics tuned for 60 fps, scaled by real frame time so 120/144 Hz screens run at the same speed
+  function loop(now){cancelAnimationFrame(raf);now=now||performance.now();const dt=last?Math.min(3,(now-last)/(1000/60)):1;last=now;step(dt);draw();if(st==='play')raf=requestAnimationFrame(loop)}
+  function step(dt){
+    t+=dt;vy+=.36*dt;y+=vy*dt;
+    spawn-=dt;if(spawn<=0){spawn+=92;const gap=150,top=60+Math.random()*(H-gap-140);pipes.push({x:W+20,top,gap,done:false})}
+    pipes.forEach(p=>p.x-=2.6*dt);pipes=pipes.filter(p=>p.x>-60);
     for(const p of pipes){
       if(!p.done&&p.x+26<90){p.done=true;score++}
       const hitX=p.x<118&&p.x+26>72, hitY=y-20<p.top||y+20>p.top+p.gap;
