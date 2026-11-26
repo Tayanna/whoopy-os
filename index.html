@@ -135,18 +135,14 @@ p{margin:0 0 10px}
 .mini-ca{display:flex;gap:8px;align-items:center}
 .mini-ca code{flex:1;font:600 12px/1.2 var(--px);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
-/* taskbar */
-#task{position:fixed;left:0;right:0;bottom:0;height:52px;background:var(--yellow);border-top:3px solid var(--ink);display:flex;align-items:center;gap:8px;padding:0 8px;z-index:800}
-#start{display:flex;align-items:center;gap:8px;height:38px;padding:0 12px 0 4px;background:var(--ink);color:var(--yellow);border:2px solid var(--ink);font:700 17px/1 var(--px)}
-#start img{width:30px;height:30px;border-radius:50%;border:2px solid var(--yellow);object-fit:cover}
-#tabs{flex:1;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
-#tabs button{height:38px;flex:none;max-width:200px;padding:0 12px;border:2px solid var(--ink);background:var(--paper);font:600 14px/1 var(--px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-#tabs button.on{background:var(--ink);color:var(--yellow)}
-#tray{display:flex;align-items:center;gap:6px;font:600 15px/1 var(--px)}
-#tray button{height:38px;min-width:38px;border:2px solid var(--ink);background:var(--paper);font:700 15px var(--px)}
-#clock{padding:0 6px;text-align:right;line-height:1.05}
-#clock small{display:block;font-size:11px}
-
+/* taskbar marquee */
+#task{position:fixed;left:0;right:0;bottom:0;height:52px;background:var(--yellow);border-top:3px solid var(--ink);overflow:hidden;z-index:800;display:flex;align-items:center}
+.mq{display:flex;width:max-content;animation:mq 28s linear infinite}
+.mq span{flex:none;display:flex;align-items:center;gap:18px;padding-right:18px;font:700 26px/1 var(--px);white-space:nowrap;letter-spacing:.02em}
+.mq img{flex:none;height:44px;width:44px;object-fit:contain;margin-top:4px;animation:shake .5s ease-in-out infinite;transform-origin:50% 90%}
+.mq span:nth-child(2n) img{animation-delay:-.25s}
+@keyframes mq{to{transform:translateX(-50%)}}
+@keyframes shake{0%,100%{transform:translate(-3px,0) rotate(-8deg)}25%{transform:translate(0,-5px) rotate(0)}50%{transform:translate(3px,0) rotate(8deg)}75%{transform:translate(0,-5px) rotate(0)}}
 /* boot */
 #boot{position:fixed;inset:0;z-index:2000;display:grid;place-items:center;background:rgba(0,0,0,.82);cursor:pointer}
 #boot .box{text-align:center;color:var(--yellow);font-family:var(--px)}
@@ -164,8 +160,6 @@ p{margin:0 0 10px}
   .win{left:6px!important;top:6px!important;width:calc(100vw - 12px)!important;height:calc(100vh - 66px)!important}
   .hello{grid-template-columns:1fr}.avatar{width:110px;height:110px}
   .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
-  #tabs button{max-width:120px}
-  #clock small{display:none}
 }
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
@@ -265,14 +259,7 @@ p{margin:0 0 10px}
 </aside>
 
 <!-- TASKBAR -->
-<footer id="task">
-  <button id="start" data-open="about"><img src="assets/avatar-64.png" alt="">WHOOPY</button>
-  <div id="tabs"></div>
-  <div id="tray">
-    <button id="mute" aria-label="Sound">♪ ON</button>
-    <div id="clock"><span id="time">--:--</span><small>SOL</small></div>
-  </div>
-</footer>
+<footer id="task" aria-label="WOOP WOOP"><div class="mq" id="mq"></div></footer>
 
 <div id="boot"><div class="box"><img src="assets/dog-lollipop.png" alt=""><b>CLICK TO BOOT</b><span>WHOOPY OS v1.0 — sound on</span></div></div>
 <div class="toast" id="toast">Contract copied!</div>
@@ -286,7 +273,7 @@ const mobile=()=>matchMedia('(max-width:860px)').matches;
 
 /* ---------- windows ---------- */
 let z=30;
-const tabs=$('#tabs');
+const tabs=null;
 function front(w){$$('.win').forEach(x=>x.classList.remove('front'));w.classList.add('front');w.style.zIndex=++z;syncTabs()}
 function open(id){const w=$('#w-'+id);if(!w)return;w.hidden=false;front(w);if(id==='game')Game.ready();if(id==='buy')initJup()}
 let jupDone=false;
@@ -303,6 +290,7 @@ function initJup(){
 }
 function close(w){w.hidden=true;w.classList.remove('front');if(w.id==='w-game')Game.stop();syncTabs()}
 function syncTabs(){
+  if(!tabs)return;
   tabs.innerHTML='';
   $$('.win').filter(w=>!w.hidden||w.dataset.min).forEach(w=>{
     const b=document.createElement('button');b.textContent=w.dataset.title;
@@ -380,10 +368,9 @@ function ui(){
 $('#play').onclick=()=>{if(aud.paused)play(cur);else{aud.pause();ui()}};
 aud.addEventListener('play',ui);aud.addEventListener('pause',ui);
 aud.addEventListener('timeupdate',()=>{if(aud.duration)$('#bar').style.width=(aud.currentTime/aud.duration*100)+'%'});
-$('#mute').onclick=()=>{muted=!muted;aud.muted=muted;$('#mute').textContent=muted?'♪ OFF':'♪ ON'};
 
 /* ---------- clock ---------- */
-const tick=()=>{$('#time').textContent=new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})};tick();setInterval(tick,15000);
+const mq=$('#mq');const unit=Array.from({length:8},()=>'<span>WOOP WOOP<img src="assets/dog-150x150.png" alt=""></span>').join('');mq.innerHTML=unit+unit;
 
 /* ---------- boot ---------- */
 $('#boot').addEventListener('click',()=>{$('#boot').classList.add('gone');play(0,true);open('about')});
